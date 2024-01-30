@@ -12,39 +12,31 @@
             text-align: center;
             margin: 50px;
             background-color: #f4f4f4;
-            /* 배경색 추가 */
         }
 
         .sec {
             font-weight: 550;
             font-size: 20px;
-            /* 폰트 크기 증가 */
             color: #5c5454;
         }
 
         #timer-display {
             font-size: 50px;
-            /* 폰트 크기 증가 */
             margin-bottom: 20px;
             color: #333;
             font-weight: bold;
-            /* 글자색 추가 */
         }
 
         #timer-input {
             font-size: 24px;
-            /* 폰트 크기 증가 */
             margin-bottom: 10px;
             padding: 10px;
-            /* 패딩 증가 */
             width: 100px;
-            /* 너비 증가 */
             border: 2px solid #bebaba;
             border-radius: 8px;
             outline: none;
             transition: border-color 0.3s;
             text-align: center;
-            /* 포커스 효과 추가 */
         }
 
         #timer-input:focus {
@@ -55,20 +47,14 @@
         #stop-button,
         #reset-button {
             font-size: 20px;
-            /* 폰트 크기 증가 */
             padding: 15px 30px;
-            /* 패딩 증가 */
             margin: 10px;
-            /* 마진 증가 */
             cursor: pointer;
             border-radius: 15px;
-            /* 버튼 모서리를 둥글게 만듭니다. */
             border: none;
             background-color: #5cb85c;
-            /* 버튼 배경색 변경 */
             color: #fff;
             font-weight: bold;
-            /* 버튼 글자색 추가 */
         }
 
         input[type="number"]::-webkit-inner-spin-button,
@@ -115,7 +101,6 @@
         <br><p>* 정지 상태에서 시간을 변경하고 싶다면 시간을 <br>변경한 뒤 시작 버튼을 두 번 클릭하세요.</p>
     </h2>
 
-    <!-- 추가된 Audio 요소 -->
     <audio id="alarm-sound" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3"></audio>
 
     <script>
@@ -159,12 +144,10 @@
                     } else {
                         timeLeft--;
         
-                        // Update color based on remaining time
                         updateTimerDisplay();
                     }
                 }, 1000);
             } else {
-                // If the timer is running, update the timeLeft with the new input value
                 timeLeft = parseInt(document.getElementById('timer-input').value, 10) || 0;
                 updateTimerDisplay();
             }
@@ -191,7 +174,6 @@
             timeLeft = parseInt(document.getElementById('timer-input').value, 10) || 0;
             updateTimerDisplay();
 
-            // Set the color to black when resetting the timer
             document.getElementById('timer-display').style.color = 'black';
         }
 
@@ -203,7 +185,6 @@
             const displayString = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
             const timerDisplay = document.getElementById('timer-display');
 
-            // Update color based on remaining time
             if (timeLeft <= 10) {
                 timerDisplay.style.color = 'red';
             } else if (timeLeft <= 30) {
