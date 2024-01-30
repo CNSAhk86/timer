@@ -100,7 +100,7 @@
     <div id="timer-display">00:00:00</div>
 
     <label class="sec" for="timer-input">시간 설정 (sec) : </label>
-    <input type="number" id="timer-input" min="1" value="120" oninput="validateInput(this)">
+    <input type="number" id="timer-input" min="0" value="120" oninput="validateInput(this)">
 
     <br>
     <button id="start-button">시작</button>
@@ -112,7 +112,7 @@
         <br><br> 5min = 300s
         <br><br> 15min = 900s
         <br><br> 50min = 3000s
-        <br><p>* 타이머 작동 도중 시간을 변경하고 싶다면 중지를 누르고 <br>시간을 변경한 뒤 시작 버튼을 두 번 클릭하세요.</p>
+        <br><p>* 정지 상태에서 시간을 변경하고 싶다면 시간을 <br>변경한 뒤 시작 버튼을 두 번 클릭하세요.</p>
     </h2>
 
     <!-- 추가된 Audio 요소 -->
@@ -221,7 +221,7 @@
         }
 
         function validateInput(input) {
-            input.value = Math.max(parseInt(input.value) || 1, 1);
+            input.value = Math.max(parseInt(input.value) || 0, 0);
         }
 
         document.getElementById('start-button').addEventListener('click', startTimer);
