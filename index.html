@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://cdn-icons-png.freepik.com/512/3003/3003202.png?ga=GA1.1.1719057422.1686104678&">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            text-align: center;
+            margin: 50px;
+            background-color: #f4f4f4;
+            /* 배경색 추가 */
+        }
+
+        .sec {
+            font-weight: 550;
+            font-size: 20px;
+            /* 폰트 크기 증가 */
+            color: #5c5454;
+        }
+
+        #timer-display {
+            font-size: 50px;
+            /* 폰트 크기 증가 */
+            margin-bottom: 20px;
+            color: #333;
+            font-weight: bold;
+            /* 글자색 추가 */
+        }
+
+        #timer-input {
+            font-size: 24px;
+            /* 폰트 크기 증가 */
+            margin-bottom: 10px;
+            padding: 10px;
+            /* 패딩 증가 */
+            width: 100px;
+            /* 너비 증가 */
+            border: 2px solid #bebaba;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.3s;
+            text-align: center;
+            /* 포커스 효과 추가 */
+        }
+
+        #timer-input:focus {
+            border-color: #4CAF50;
+        }
+
+        #start-button,
+        #stop-button,
+        #reset-button {
+            font-size: 20px;
+            /* 폰트 크기 증가 */
+            padding: 15px 30px;
+            /* 패딩 증가 */
+            margin: 10px;
+            /* 마진 증가 */
+            cursor: pointer;
+            border-radius: 15px;
+            /* 버튼 모서리를 둥글게 만듭니다. */
+            border: none;
+            background-color: #5cb85c;
+            /* 버튼 배경색 변경 */
+            color: #fff;
+            font-weight: bold;
+            /* 버튼 글자색 추가 */
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .Sweet,
+        .Sweet1,
+        .Sweet2 {
+            font-weight: bolder;
+        }
+
+        h2 {
+            color: #706e6e;
+        }
+    </style>
+    <title>학교 공부용 타이머</title>
+</head>
+
+<body>
+
+    <div id="timer-display">00:00:00</div>
+
+    <label class="sec" for="timer-input">시간 설정 (sec) : </label>
+    <input type="number" id="timer-input" min="1" value="120" oninput="validateInput(this)">
+
+    <br>
+
+    <button id="start-button">시작</button>
+    <button id="stop-button">중지</button>
+    <button id="reset-button">초기화</button>
+    <h2>
+        <br> 2min 30s = 150s
+        <br><br> 3min = 180s
+        <br><br> 5min = 300s
+        <br><br> 15min = 900s
+        <br><br> 50min = 3000s
+    </h2>
+
+    <!-- 추가된 Audio 요소 -->
+    <audio id="alarm-sound" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3"></audio>
+
+    <script>
+        let timer;
+        let timeLeft;
+        let timerRunning = false;
+
+        function startTimer() {
+            if (!timerRunning) {
+                if (timeLeft === undefined) {
+                    timeLeft = parseInt(document.getElementById('timer-input').value, 10) || 0;
+                }
+
+                updateTimerDisplay();
+                timerRunning = true;
+
+                timer = setInterval(() => {
+                    if (timeLeft <= 0) {
+                        clearInterval(timer);
+                        timerRunning = false;
+
+                        playAlarm();
+
+                        Swal.fire({
+                            title: '타이머 종료',
+                            text: '지정된 시간이 종료되었습니다.',
+                            icon: 'success',
+                            confirmButtonText: '확인',
+                            allowOutsideClick: false,
+                            confirmButtonColor: '#5cb85c',
+                            customClass: {
+                                confirmButton: 'Sweet',
+                                title: 'Sweet1',
+                                text: 'Sweet2'
+                            }
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                stopAlarmAndReset();
+                            }
+                        });
+                    } else {
+                        timeLeft--;
+
+                        // Update color based on remaining time
+                        updateTimerDisplay();
+                    }
+                }, 1000);
+            } else {
+                // If the timer is running, update the timeLeft with the new input value
+                timeLeft = parseInt(document.getElementById('timer-input').value, 10) || 0;
+                updateTimerDisplay();
+            }
+        }
+
+        function stopAlarmAndReset() {
+            const alarmSound = document.getElementById('alarm-sound');
+            alarmSound.pause();
+            alarmSound.currentTime = 0;
+            resetTimer();
+        }
+
+        function stopTimer() {
+            if (timerRunning) {
+                clearInterval(timer);
+                timerRunning = false;
+                updateTimerDisplay();
+            }
+        }
+
+        function resetTimer() {
+            clearInterval(timer);
+            timerRunning = false;
+            timeLeft = parseInt(document.getElementById('timer-input').value, 10) || 0;
+            updateTimerDisplay();
+
+            // Set the color to black when resetting the timer
+            document.getElementById('timer-display').style.color = 'black';
+        }
+
+        function updateTimerDisplay() {
+            const hours = Math.floor(timeLeft / 3600);
+            const minutes = Math.floor((timeLeft % 3600) / 60);
+            const seconds = timeLeft % 60;
+
+            const displayString = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            const timerDisplay = document.getElementById('timer-display');
+
+            // Update color based on remaining time
+            if (timeLeft <= 10) {
+                timerDisplay.style.color = 'red';
+            } else if (timeLeft <= 30) {
+                timerDisplay.style.color = 'orange';
+            } else {
+                timerDisplay.style.color = 'black';
+            }
+
+            timerDisplay.textContent = displayString;
+        }
+
+        function playAlarm() {
+            const alarmSound = document.getElementById('alarm-sound');
+            alarmSound.play();
+        }
+
+        function validateInput(input) {
+            input.value = Math.max(parseInt(input.value) || 1, 1);
+        }
+
+        document.getElementById('start-button').addEventListener('click', startTimer);
+        document.getElementById('stop-button').addEventListener('click', stopTimer);
+        document.getElementById('reset-button').addEventListener('click', resetTimer);
+    </script>
+
+
+</body>
+
+</html>
